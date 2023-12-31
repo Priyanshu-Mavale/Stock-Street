@@ -1,0 +1,9 @@
+/Stock_Trainer/venv/
+
+venv
+
+venv/
+
+.venv/
+
+./Stock_Trainer/venv
