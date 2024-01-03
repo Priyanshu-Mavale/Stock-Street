@@ -119,6 +119,7 @@ def main_home(request):
     # print("ehedss")
     # print(room2)
     # print(glo)
+    sum2=round(sum2,2)
     param = {'rank': k3, 'avail': sum2, 'profit': round(sum1 - init, 2),'global':glo, 'room': room2, 'subs': subs}
     return render(request, 'Stock_Game/main.html', param)
 

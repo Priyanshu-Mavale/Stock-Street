@@ -193,10 +193,10 @@
         <div class="blogs">
             <div class="user" style="background-image:url('{% static 'Stock_Game/images/stock-prof.jpg' %}')">
             </div>
-            <button class="buttons" style="width: 10em; margin-left: 3px; background-color: rgb(167, 0, 130); font-weight: bold;"><a href="{% url 'subscribe' %}">Add Subscription</a></button>
+            <button class="buttons subs" style="width: 10em; margin-left: 3px; background-color: rgb(167, 0, 130); font-weight: bold;"><a href="{% url 'subscribe' %}">Add Subscription</a></button>
             <button class="buttons"><a href="{% url 'create-blog' %}">Create Blog</a></button>
             <hr>
-            <button class="buttons" style="margin-left: 6em;"><a href="{% url 'blog_list' %}">View Blogs</a></button>
+            <button class="buttons" style="margin-left: 6em;margin-bottom: 1em;"><a href="{% url 'blog_list' %}">View Blogs</a></button>
             <h5 style="margin-left:5px;">Consultants you follow :</h5>
             <div class="scroll"style="height: 11em; margin:5px">
                 {% for i in subs %}
