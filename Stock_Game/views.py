@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from .models import Room, Buy, Join, Stock, Profile, Consultant, Subscribe
 from django.shortcuts import render, redirect, get_object_or_404
 import ast
-from bs4 import BeautifulSoup as BS
+# from bs4 import BeautifulSoup as BS
 import requests as req
 from operator import itemgetter
 from .models import Stock, Buy, Room, Join
@@ -77,48 +77,35 @@ def join(request):
 
 
 def main_home(request):
-    room1 = Room.objects.filter(id=1)
-    for i in room1:
-        k1 = i
-    init = room1[0].room_money
+    room1 = Room.objects.get(id=1)
+    k1=room1
+    init = room1.room_money
     teams = Join.objects.filter(room=k1)
-    # print("teams",teams)
-    # nse = Nse()
-    Profile1 = Profile.objects.filter(user=request.user)
-    room2 = Join.objects.filter(reg_user_id=Profile1[0])
-    # print("room2",room2)
-    subs = Subscribe.objects.filter(reg_user=Profile1[0])
-    buy2 = Buy.objects.filter(reg_user_id=Profile1[0]).filter(reg_room_id=1)
+    Profile1 = Profile.objects.get(user=request.user)
+    room2 = Join.objects.filter(reg_user_id=Profile1)
+    subs = Subscribe.objects.filter(reg_user=Profile1)
+    buy2 = Buy.objects.filter(reg_user_id=Profile1).filter(reg_room_id=1)
     sum1 = room2[0].user_money
     sum2 = room2[0].user_money
-    # print("sum1",sum1)
     for j in buy2:
-        x = j.reg_stock_id.nse_code + ".NS"
-        # print(x)
+        x=f'{j.reg_stock_id.nse_code}{".NS"}'
+        # x = j.reg_stock_id.nse_code + ".NS"
         quote = stock_info.get_live_price(x)
-        # print(quote)
         sum1 += (quote * j.no_of_shares)
-    # print(sum1)
     k3 = 1
     for i in teams:
-        p = []
-        p.append(i.reg_user_id.user.username)
         buy1 = Buy.objects.filter(reg_user_id=i.reg_user_id).filter(reg_room_id=i.room)
         sum = i.user_money
-        k2 = -99999
+        # k2 = -99999
         for j in buy1:
-            x = j.reg_stock_id.nse_code + ".NS"
-            # print(x)
+            x=f'{j.reg_stock_id.nse_code}{".NS"}'
+            # x = j.reg_stock_id.nse_code + ".NS"
             quote = stock_info.get_live_price(x)
             sum += (quote * j.no_of_shares)
         if sum > sum1:
             k3 += 1
-    # print(init)
     glo=room2[:1]
     room2=room2[1:]
-    # print("ehedss")
-    # print(room2)
-    # print(glo)
     sum2=round(sum2,2)
     param = {'rank': k3, 'avail': sum2, 'profit': round(sum1 - init, 2),'global':glo, 'room': room2, 'subs': subs}
     return render(request, 'Stock_Game/main.html', param)
@@ -219,8 +206,8 @@ def portfolio(request, team_name):
         k2['stock_name'] = i.reg_stock_id.stock_name
         k2['no_of_shares'] = i.no_of_shares
         quote = stock_info.get_live_price(i.reg_stock_id.nse_code + ".NS")
-        k2['old_price'] = i.current_stock_price
-        k2['Current_price'] = quote
+        k2['old_price'] = round(i.current_stock_price,2)
+        k2['Current_price'] = round(quote,2)
         k2['profit'] = round((quote- i.current_stock_price) * i.no_of_shares, 2)
         sum = sum + (quote) * i.no_of_shares
         sums = sums + (quote) * i.no_of_shares
@@ -231,7 +218,7 @@ def portfolio(request, team_name):
         var = var + 1
         k.append(k2)
     print(init)
-    param = {'k': k, 'money_left': (init - inv), 'Profit': round(sum - inv, 2), 'Initial': init, 'name': name,
+    param = {'k': k, 'money_left': round((init - inv),2), 'Profit': round(sum - inv, 2), 'Initial': round(init,2), 'name': name,
              'id': id1}
     return render(request, 'Stock_Game/portfolio.html', param)
 
