@@ -87,10 +87,15 @@ def main_home(request):
     buy2 = Buy.objects.filter(reg_user_id=Profile1).filter(reg_room_id=1)
     sum1 = room2[0].user_money
     sum2 = room2[0].user_money
+    stocks_dic={}
+    all_stocks=Stock.objects.all()
+    for i in all_stocks:
+        stocks_dic[i.nse_code + ".NS"]=stock_info.get_live_price(i.nse_code + ".NS")
     for j in buy2:
         x=f'{j.reg_stock_id.nse_code}{".NS"}'
         # x = j.reg_stock_id.nse_code + ".NS"
-        quote = stock_info.get_live_price(x)
+        # quote = stock_info.get_live_price(x)
+        quote=stocks_dic[x]
         sum1 += (quote * j.no_of_shares)
     k3 = 1
     for i in teams:
@@ -100,7 +105,8 @@ def main_home(request):
         for j in buy1:
             x=f'{j.reg_stock_id.nse_code}{".NS"}'
             # x = j.reg_stock_id.nse_code + ".NS"
-            quote = stock_info.get_live_price(x)
+            quote=stocks_dic[x]
+            # quote = stock_info.get_live_price(x)
             sum += (quote * j.no_of_shares)
         if sum > sum1:
             k3 += 1
@@ -131,6 +137,10 @@ def stocks_list(request, team_name):
 
 def ranklist(request, team_name):
     # print(team_name)
+    stocks_dic={}
+    all_stocks=Stock.objects.all()
+    for i in all_stocks:
+        stocks_dic[i.nse_code + ".NS"]=stock_info.get_live_price(i.nse_code + ".NS")
     room1 = Room.objects.filter(id=team_name)
     # print(room1)
     for i in room1:
@@ -141,18 +151,20 @@ def ranklist(request, team_name):
     for i in teams:
         p = []
         buy1 = Buy.objects.filter(reg_user_id=i.reg_user_id).filter(reg_room_id=i.room)
-        print("x")
-        print(buy1)
-        print("y")
+        # print("x")
+        # print(buy1)
+        # print("y")
         sum = i.user_money
         # print(i.user_money)
         k2 = -99999;
-        print(len(buy1))
+        # print(len(buy1))
         p1="Not bought yet"
         if(len(buy1)>0):
             for j in buy1:
-                print(i.reg_user_id.user.username)
-                quote = stock_info.get_live_price(j.reg_stock_id.nse_code + ".NS")
+                # print(i.reg_user_id.user.username)
+                # quote = stock_info.get_live_price(j.reg_stock_id.nse_code + ".NS")
+                stock=j.reg_stock_id.nse_code + ".NS"
+                quote=stocks_dic[stock]
                 if k2 < quote * j.no_of_shares:
                     p1 = j.reg_stock_id.stock_name
                 sum += (quote * j.no_of_shares)
@@ -163,9 +175,9 @@ def ranklist(request, team_name):
         if(p1 !='Not bought yet'):
             p.append(i.reg_user_id.user.username)
             p.append(int(sum))
-            print(p1)
+            # print(p1)
             p.append(p1)
-            print(p)
+            # print(p)
             k.append(p)
     k.sort(key=lambda x: x[1], reverse=True)
     p2 = []
@@ -243,12 +255,12 @@ def stock_details(request, room_name, stock_name):
         'room_id': room_name,
         'room_name': x,
         'stock_name': stock_name,
-        'current_stock_price': quote,
+        'current_stock_price': round(quote,2),
     }
     p = Profile.objects.filter(user=request.user)[0]
     room_b = Join.objects.filter(reg_user_id=p, room=room_name)
-    context['room_balance'] = room_b[0].user_money
-    context['no_of_shares'] = 0;
+    context['room_balance'] = round(room_b[0].user_money,2)
+    context['no_of_shares'] = 0
     print(p, x, int(room_name), stock_name)
     x = Stock.objects.filter(nse_code=stock_name)[0].stock_name
     context['temp'] = x

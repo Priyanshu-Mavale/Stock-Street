@@ -31,3 +31,10 @@ class Buy(models.Model):
     reg_stock_id = models.ForeignKey(Stock, on_delete=models.CASCADE)
     current_stock_price = models.FloatField()
     no_of_shares = models.IntegerField()
+
+class Ratings(models.Model):
+    reg_user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    reg_room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
+    ratings=models.IntegerField()
+    sum=models.IntegerField(default=0)
+    top_stock=models.CharField(max_length=50)

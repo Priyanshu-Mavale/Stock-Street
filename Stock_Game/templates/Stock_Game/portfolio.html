@@ -321,14 +321,25 @@
         <div style="width:35em">
           <h4>{{i.stock_name}}</h4>
           <div class="profit-current">
-            <h6 style="margin-bottom: 0px;">Profit/Loss: <span class="rupee">₹</span>{{i.profit}}</h6>
-            <h6 style="margin-left: 2em;margin-bottom: 0px">Current Price: <span class="rupee">₹</span>{{i.Current_price}}</h6>
+            <h6 id="profit{{i.var}}"style="margin-bottom: 0px;">Profit/Loss: <span class="rupee">₹</span>{{i.profit}}</h6>
+            <h6 id="curr_money{{i.var}}" style="margin-left: 2em;margin-bottom: 0px">Current Price: <span class="rupee">₹</span>{{i.Current_price}}</h6>
+            <input id="curr_money_1_{{i.var}}" style="display: none;"type="number" value="{{i.Current_price}}">
           </div>
           <div class="invested-quantity">
-            <h6>Invested Price: <span class="rupee">₹</span>{{i.old_price}}</h6>
+            <h6 id="money_inv{{i.var}}">Invested Price: <span class="rupee">₹</span>{{i.old_price}}</h6>
+            <input id="money_inv_1_{{i.var}}" style="display: none;"type="number" value="{{i.old_price}}">
+
             <h6 style="margin-left: 2em;">Quantity: {{i.no_of_shares}}</h6>
           </div>
         </div>
+        <script>
+          if(document.getElementById('money_inv_1_{{i.var}}').value > document.getElementById('curr_money_1_{{i.var}}').value){
+            document.getElementById('profit{{i.var}}').style.color = "red";
+          }
+          else {
+                document.getElementById("profit{{i.var}}").style.color = 'green';
+          }
+        </script>
         <button id="myBtn{{i.var}}" class="sell">Sell Shares</button>
 
         

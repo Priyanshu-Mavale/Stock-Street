@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'User',
     'Stock_Game',
     'crispy_forms',
-    'ckeditor'
+    'ckeditor',
+    'django_apscheduler'
 ]
 
 MIDDLEWARE = [
